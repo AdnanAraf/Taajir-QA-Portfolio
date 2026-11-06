@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>[#TAJ-15] REPORT: Product Sales (Paid , Partial)  Return Amount Is Not Deducted from Revenue.</title>
+    <meta http-equiv="Content-Type" Content="application/vnd.ms-word; charset=UTF-8">
+        <style type="text/css">
+
+.tableBorder, .grid
+{
+    background-color: #fff;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tableBorder td, .grid td
+{
+    vertical-align: top;
+    padding: 2px;
+    border: 1px solid #ccc;
+}
+
+.noPadding
+{
+    padding: 0 !important;
+}
+
+h3 .subText
+{
+    font-size: 60%;
+    font-weight: normal;
+}
+
+.tabLabel
+{
+    font-weight: bold;
+    border: 1px solid #ccc;
+    border-bottom:none;
+    padding: 2px;
+    display: inline;
+}
+
+td.blank
+{
+    padding: 0;
+    margin: 0;
+}
+
+.blank td
+{
+    border: none;
+}
+
+#descriptionArea
+{
+    margin: 0;
+    padding: 2px;
+    border: 1px solid #ccc;
+}
+
+hr
+{
+    border-top:1px solid #aaa;
+}
+
+hr.fullcontent
+{
+  height: 15px;
+  padding: 10px 0;
+  background: #fff url('https://c193018sworkspace-27261905.atlassian.net/images/icons/hr.gif') no-repeat scroll center;
+}
+
+</style>
+
+</head>
+<body>
+
+<table class="tableBorder" cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td bgcolor="#f0f0f0" width="100%" colspan="2" valign="top">
+                            <h3 class="formtitle">
+                        [TAJ-15]&nbsp;<a href="https://c193018sworkspace-27261905.atlassian.net/browse/TAJ-15">REPORT: Product Sales (Paid , Partial)  Return Amount Is Not Deducted from Revenue.</a>
+            <span class="subText">
+               Created: 15/Oct/26                   &nbsp;Updated: 03/Nov/26
+
+                                                    &nbsp;Resolved: 03/Nov/26
+                            </span>
+            </h3>
+        </td>
+    </tr>
+    <tr>
+        <td width="20%"><b>Status:</b></td>
+        <td width="80%">Done</td>
+    </tr>
+    <tr>
+        <td width="20%"><b>Project:</b></td>
+        <td width="80%"><a href="https://c193018sworkspace-27261905.atlassian.net/secure/BrowseProject.jspa?id=10067">Inventory Management_Taajir</a></td>
+    </tr>
+
+        <tr>
+            <td><b>Components:</b></td>
+            <td>
+                            None
+                </td>
+    </tr>
+    
+
+        <tr>
+            <td><b>Affects versions:</b></td>
+            <td>
+                            None
+                </td>
+    </tr>
+    
+
+        <tr>
+            <td><b>Fix versions:</b></td>
+            <td>
+                            None
+                </td>
+    </tr>
+    
+    
+    </table>
+
+<br />
+<table class="grid" cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td bgcolor="#f0f0f0" valign="top" width="20%">
+            <b>Type:</b>
+        </td>
+        <td bgcolor="#ffffff" valign="top"  width="30%" >
+            Bug
+        </td>
+
+                    <td bgcolor="#f0f0f0">
+                <b>Priority:</b>
+            </td>
+            <td bgcolor="#ffffff" valign="top" nowrap>
+                Medium
+            </td>
+            </tr>
+    <tr>
+                        <td bgcolor="#f0f0f0" valign="top" width="20%">
+                <b>Reporter:</b>
+            </td>
+            <td bgcolor="#ffffff" valign="top"  width="30%" >
+                                        
+                
+        
+            <a class="user-hover" rel="712020:0718517e-6e40-487f-b354-0128850cf1ab"
+                id="word_reporter_712020:0718517e-6e40-487f-b354-0128850cf1ab"
+                href="https://c193018sworkspace-27261905.atlassian.net/secure/ViewProfile.jspa?accountId=712020%3A0718517e-6e40-487f-b354-0128850cf1ab">
+                    C193_018 Adnan Araf
+                </a>
+
+                            </td>
+        
+                    <td bgcolor="#f0f0f0" width="20%">
+                <b>Assignee:</b>
+            </td>
+            <td bgcolor="#ffffff" valign="top" nowrap  width="30%" >
+                                    Unassigned
+                            </td>
+            </tr>
+    	<tr>
+		<td bgcolor="#f0f0f0" width="20%">
+			<b>Resolution:</b>
+		</td>
+		<td bgcolor="#ffffff" valign="top" width="30%" nowrap>
+                            Done
+                    </td>
+                    <td bgcolor="#f0f0f0" width="20%">
+                <b>Votes:</b>
+            </td>
+            <td bgcolor="#ffffff" valign="top" width="30%" nowrap>
+                0
+            </td>
+        
+    </tr>
+    
+        <tr>
+        <td bgcolor="#f0f0f0" width="20%">
+            <b>Labels:</b>
+        </td>
+        <td id="labels-10193-value" class="value" bgcolor="#ffffff" valign="top" colspan="3" nowrap>
+                            None
+                    </td>
+    </tr>
+    
+    	<tr>
+        		<td bgcolor="#f0f0f0" width="20%"><b>Remaining Estimate:</b></td>
+        <td bgcolor="#ffffff" valign="top" nowrap width="80%" colspan="3">
+                            Not Specified
+            		</td>
+    </tr>
+    <tr>
+                <td bgcolor="#f0f0f0" width="20%"><b>Time Spent:</b></td>
+		<td bgcolor="#ffffff" valign="top" nowrap width="80%" colspan="3">
+                            Not Specified
+            		</td>
+	</tr>
+    <tr>
+                <td bgcolor="#f0f0f0" width="20%"><b>Original estimate:</b></td>
+		<td bgcolor="#ffffff" valign="top" nowrap width="80%" colspan="3">
+                            Not Specified
+            		</td>
+    </tr>
+    
+    </table>
+
+
+
+    <br />
+
+    	<table class="grid" cellpadding="0" cellspacing="0" border="0" width="100%">
+            
+
+        
+    
+
+
+    
+                        <tr>
+                <td bgcolor="#f0f0f0" width="20%" valign="top"><b>Rank:</b></td>
+                <td id="customfield_10019-10193-value" class="value" bgcolor="#ffffff" width="80%">      0|i0007h:
+  </td>
+            </tr>
+                                <tr>
+                <td bgcolor="#f0f0f0" width="20%" valign="top"><b>Sprint:</b></td>
+                <td id="customfield_10020-10193-value" class="value" bgcolor="#ffffff" width="80%">TAJ Sprint 2</td>
+            </tr>
+            </table>
+
+    <br/>
+
+    <table cellpadding="2" cellspacing="0" border="0" width="100%" align="center">
+    <tr>
+        <td bgcolor="#bbbbbb" width="1%" nowrap align="center">
+            &nbsp;<font color="#ffffff"><b>Description</b></font>&nbsp;
+        </td>
+        <td>&nbsp;</td>
+    </tr>
+    </table>
+
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td id="descriptionArea">
+            <p><b>Description</b> : When a product is returned after a successful sales invoice, the returned amount is not deducted from the total revenue in the Daily Report. As a result, the system continues to display the original sales amount instead of the updated revenue after the sales return. This causes an inaccurate revenue calculation and affects the reliability of the Daily report.</p>
+
+<p><b>Step to Reproduce :</b> <br/>
+1. Go to Sales Invoice<br/>
+2. Click the Sales invoice button and select multiple inventories.<br/>
+3. Create Sales Invoice.<br/>
+4. Go to Report and select Daily Report , Check the Revenue.<br/>
+5.  Now go to sales invoice and Return Product<br/>
+6. Check the Daily Report Revenue.</p>
+
+<p><b>Test Data:</b><br/>
+Total Revenue : 6000 taka<br/>
+Sales Return : 3000 taka<br/>
+revenue : 3000 taka</p>
+
+<p><b>Expected Result</b> : The System should deduct product sales return from the total revenue and the system should display correctly total Sales revenue .<br/>
+<b>Actual result:</b> The System doesn’t deduct product sales return from the total sales revenue. It display 3000 Taka.</p>
+
+<p><b>Attachment :</b><br/>
+<a href="https://www.loom.com/share/f93b71ce9596404bbfc852139cf300aa" class="external-link" rel="nofollow noreferrer">https://www.loom.com/share/f93b71ce9596404bbfc852139cf300aa</a></p>
+            <br/>
+        </td>
+    </tr>
+    </table>
+
+Generated at Fri Nov 06 05:24:52 UTC 2026 by C193_018 Adnan Araf using Jira 1001.0.0-SNAPSHOT#100295-rev:30f301faa123fbef7f33006c52a9db372ad7afa7.
+
+</body>
+</html>
