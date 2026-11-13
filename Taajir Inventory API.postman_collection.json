@@ -1,0 +1,2207 @@
+{
+  "info": {
+    "_postman_id": "5855e1bf-8142-43a1-9798-5be74cbb3229",
+    "name": "Taajir Inventory API",
+    "description": "Postman collection for the Taajir FastAPI backend.\n\n### Authentication\n- Tenant endpoints (`/v1/inventories`, `/v1/invoices`, `/v1/parties`, `/v1/reports`, `/v1/widgets`) require:\n  - `Authorization: Bearer <supabase_access_token>` (collection-level Bearer auth, `bearerToken` variable)\n  - `X-Organization-ID: <organization_uuid>` (`organizationId` variable)\n- Admin endpoints (`/v1/admin/organizations`) require `X-Admin-Token: Bearer <ADMIN_TOKEN>` (`adminToken` variable).\n- Health endpoints need no authentication.\n\n### Variables\nSet `baseUrl`, `bearerToken`, `organizationId` and `adminToken` in the environment. The list requests save `inventoryId`, `partyId`, `invoiceId` and `branchId` automatically for use by detail requests.\n\nDefault base URL: `http://127.0.0.1:8000`. Hosted: `https://api.taajir.app` (prod) or `https://api.dev.taajir.app` (dev).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "56367791",
+    "_collection_link": "https://go.postman.co/collection/56367791-5855e1bf-8142-43a1-9798-5be74cbb3229?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Health & Discovery",
+      "item": [
+        {
+          "name": "API root",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                ""
+              ]
+            },
+            "description": "Returns a simple message confirming the API is running."
+          },
+          "response": []
+        },
+        {
+          "name": "Health check",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
+            },
+            "description": "Liveness probe. Returns `{\"status\": \"ok\"}`."
+          },
+          "response": []
+        },
+        {
+          "name": "OpenAPI schema",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/openapi.json",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "openapi.json"
+              ]
+            },
+            "description": "Machine-readable OpenAPI 3 document for the whole API."
+          },
+          "response": []
+        },
+        {
+          "name": "Swagger UI",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/docs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "docs"
+              ]
+            },
+            "description": "Interactive API documentation (HTML)."
+          },
+          "response": []
+        }
+      ],
+      "description": "Unauthenticated liveness endpoints and the generated OpenAPI schema.",
+      "auth": {
+        "type": "noauth"
+      }
+    },
+    {
+      "name": "Inventories",
+      "item": [
+        {
+          "name": "List inventory items",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// const body = pm.response.json();\n// if (body && Array.isArray(body.items) && body.items.length > 0) {\n//     pm.collectionVariables.set(\"inventoryId\", body.items[0].id);\n// }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authorization_secret}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware)."
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/inventories?mapped_only=true&branch_id={{branchId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "inventories"
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "panjabi 35",
+                  "description": "Name, barcode or serial",
+                  "disabled": true
+                },
+                {
+                  "key": "warehouse_id",
+                  "value": "{{warehouseId}}",
+                  "description": "Warehouse UUID",
+                  "disabled": true
+                },
+                {
+                  "key": "storage_type",
+                  "value": "",
+                  "description": "Storage type filter",
+                  "disabled": true
+                },
+                {
+                  "key": "stock_status",
+                  "value": "",
+                  "description": "Stock status filter",
+                  "disabled": true
+                },
+                {
+                  "key": "sort_by",
+                  "value": "name__desc",
+                  "description": "Column to sort by",
+                  "disabled": true
+                },
+                {
+                  "key": "display_name",
+                  "value": "Panjabi blue 2",
+                  "disabled": true
+                },
+                {
+                  "key": "category_id",
+                  "value": "{{categoryId}}",
+                  "disabled": true
+                },
+                {
+                  "key": "mapped_only",
+                  "value": "true"
+                },
+                {
+                  "key": "branch_id",
+                  "value": "{{branchId}}"
+                }
+              ]
+            },
+            "description": "Paginated inventory table. `search` matches name, barcode or serial; `export=true` ignores limit and includes serials."
+          },
+          "response": []
+        },
+        {
+          "name": "Inventory summary",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware)."
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/inventories/summary?branch_id={{branchId}}&mapped_only=true",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "inventories",
+                "summary"
+              ],
+              "query": [
+                {
+                  "key": "branch_id",
+                  "value": "{{branchId}}",
+                  "description": "Branch UUID"
+                },
+                {
+                  "key": "warehouse_id",
+                  "value": "{{warehouseId}}",
+                  "description": "Warehouse UUID",
+                  "disabled": true
+                },
+                {
+                  "key": "mapped_only",
+                  "value": "true"
+                }
+              ]
+            },
+            "description": "Aggregated stock totals: in stock, sold, incoming, outgoing, purchased, returned, transferred out."
+          },
+          "response": []
+        },
+        {
+          "name": "Inventory invoice items",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware)."
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/inventories/{{inventoryId}}/invoice-items?invoice_type=customer&payment_status=paid&start_date=2026-10-01T00:00:00Z&end_date=2026-10-31T23:59:59Z&search_term=Halim&sort_key=total_due&sort_direction=desc&skip=0&limit=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "inventories",
+                "{{inventoryId}}",
+                "invoice-items"
+              ],
+              "query": [
+                {
+                  "key": "branch_id",
+                  "value": "{{branchId}}",
+                  "description": "Branch UUID",
+                  "disabled": true
+                },
+                {
+                  "key": "invoice_type",
+                  "value": "customer",
+                  "description": "customer or supplier"
+                },
+                {
+                  "key": "payment_status",
+                  "value": "paid",
+                  "description": "paid, unpaid or partially_paid"
+                },
+                {
+                  "key": "start_date",
+                  "value": "2026-10-01T00:00:00Z",
+                  "description": "ISO 8601 datetime"
+                },
+                {
+                  "key": "end_date",
+                  "value": "2026-10-31T23:59:59Z",
+                  "description": "ISO 8601 datetime"
+                },
+                {
+                  "key": "search_term",
+                  "value": "Halim",
+                  "description": "Invoice serial or party name"
+                },
+                {
+                  "key": "sort_key",
+                  "value": "total_due",
+                  "description": "created_at, total_price, total_due, total_paid, party_name"
+                },
+                {
+                  "key": "sort_direction",
+                  "value": "desc",
+                  "description": "asc or desc"
+                },
+                {
+                  "key": "skip",
+                  "value": "0",
+                  "description": "Offset for pagination"
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Page size (1-100)"
+                }
+              ]
+            },
+            "description": "Invoices that include the given inventory item, with optional type/status/date filters."
+          },
+          "response": []
+        },
+        {
+          "name": "Inventory audit logs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware)."
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/inventories/{{inventoryId}}/audit-logs?module_id=bb8a2ab4-2601-4fb8-b9d3-7e3e90674183&search=Added inventory",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "inventories",
+                "{{inventoryId}}",
+                "audit-logs"
+              ],
+              "query": [
+                {
+                  "key": "module_id",
+                  "value": "bb8a2ab4-2601-4fb8-b9d3-7e3e90674183",
+                  "description": "Module UUID"
+                },
+                {
+                  "key": "type_",
+                  "value": "",
+                  "description": "Audit action type",
+                  "disabled": true
+                },
+                {
+                  "key": "start_date",
+                  "value": "2026-01-01T00:00:00Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                },
+                {
+                  "key": "end_date",
+                  "value": "2026-12-31T23:59:59Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                },
+                {
+                  "key": "skip",
+                  "value": "0",
+                  "description": "Offset for pagination",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Page size (1-100)",
+                  "disabled": true
+                },
+                {
+                  "key": "action",
+                  "value": "Added inventory",
+                  "disabled": true
+                },
+                {
+                  "key": "branch_id",
+                  "value": "{{branchId}}",
+                  "disabled": true
+                },
+                {
+                  "key": "search",
+                  "value": "Added inventory"
+                }
+              ]
+            },
+            "description": "Audit trail entries for the given inventory item."
+          },
+          "response": []
+        },
+        {
+          "name": "Inventory stock movements",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware)."
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/inventories/{{inventoryId}}/stock-movements?type_=sale_return&invoice_type=customer&branch_id={{branchId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "inventories",
+                "{{inventoryId}}",
+                "stock-movements"
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Free-text search",
+                  "disabled": true
+                },
+                {
+                  "key": "type_",
+                  "value": "sale_return",
+                  "description": "Movement type"
+                },
+                {
+                  "key": "invoice_type",
+                  "value": "customer",
+                  "description": "customer or supplier"
+                },
+                {
+                  "key": "branch_id",
+                  "value": "{{branchId}}",
+                  "description": "Branch UUID"
+                },
+                {
+                  "key": "start_date",
+                  "value": "2026-01-01T00:00:00Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                },
+                {
+                  "key": "end_date",
+                  "value": "2026-12-31T23:59:59Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Inbound/outbound/transfer/adjustment movements for the given inventory item."
+          },
+          "response": []
+        },
+        {
+          "name": "Inventory serials",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware)."
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/inventories/{{inventoryId}}/serials?search=7351374903184&branch_id={{branchId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "inventories",
+                "{{inventoryId}}",
+                "serials"
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "7351374903184",
+                  "description": "Serial search"
+                },
+                {
+                  "key": "branch_id",
+                  "value": "{{branchId}}",
+                  "description": "Branch UUID"
+                }
+              ]
+            },
+            "description": "Serial numbers tracked for the given inventory item."
+          },
+          "response": []
+        }
+      ],
+      "description": "Inventory list, stock summary, invoice history, audit logs, movements and serials."
+    },
+    {
+      "name": "Invoices",
+      "item": [
+        {
+          "name": "List invoices",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();\nif (body && Array.isArray(body.items) && body.items.length > 0) {\n    pm.collectionVariables.set(\"invoiceId\", body.items[0].id);\n    if (body.items[0].branch_id) {\n        pm.collectionVariables.set(\"branchId\", body.items[0].branch_id);\n    }\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware)."
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/invoices/?invoice_type=customer&payment_status=partially_paid&sort_key=created_at&sort_direction=desc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "invoices",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "branch_id",
+                  "value": "{{branchId}}",
+                  "description": "Branch UUID",
+                  "disabled": true
+                },
+                {
+                  "key": "invoice_type",
+                  "value": "customer",
+                  "description": "customer or supplier"
+                },
+                {
+                  "key": "payment_status",
+                  "value": "partially_paid",
+                  "description": "paid, unpaid or partially_paid"
+                },
+                {
+                  "key": "start_date",
+                  "value": "2026-01-01T00:00:00Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                },
+                {
+                  "key": "end_date",
+                  "value": "2026-12-31T23:59:59Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                },
+                {
+                  "key": "search_term",
+                  "value": "",
+                  "description": "Invoice serial or party name",
+                  "disabled": true
+                },
+                {
+                  "key": "sort_key",
+                  "value": "created_at",
+                  "description": "created_at, total_price, total_due, total_paid, party_name, payment_status"
+                },
+                {
+                  "key": "sort_direction",
+                  "value": "desc",
+                  "description": "asc or desc"
+                },
+                {
+                  "key": "skip",
+                  "value": "0",
+                  "description": "Offset for pagination",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Page size (1-100)",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Paginated invoice list. Profit is only returned when the caller has the `reports` module permission."
+          },
+          "response": []
+        },
+        {
+          "name": "Invoice line items",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware).",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/invoices/{{invoiceId}}/items",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "invoices",
+                "{{invoiceId}}",
+                "items"
+              ]
+            },
+            "description": "Line items (inventory, quantity, prices, discounts, serials) for one invoice."
+          },
+          "response": []
+        }
+      ],
+      "description": "Customer/supplier invoice list and line items."
+    },
+    {
+      "name": "Parties",
+      "item": [
+        {
+          "name": "List parties",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();\nif (body && Array.isArray(body.items) && body.items.length > 0) {\n    pm.collectionVariables.set(\"partyId\", body.items[0].id);\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware)."
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/parties/?branch_id={{branchId}}&party_type=customer",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "parties",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Name or phone number",
+                  "disabled": true
+                },
+                {
+                  "key": "party_type",
+                  "value": "customer",
+                  "description": "customer or supplier",
+                  "disabled": true
+                },
+                {
+                  "key": "archived",
+                  "value": "false",
+                  "description": "Include archived parties when true",
+                  "disabled": true
+                },
+                {
+                  "key": "skip",
+                  "value": "0",
+                  "description": "Offset for pagination",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Page size (1-100)",
+                  "disabled": true
+                },
+                {
+                  "key": "branch_id",
+                  "value": "{{branchId}}",
+                  "description": "Branch UUID"
+                },
+                {
+                  "key": "party_type",
+                  "value": "customer"
+                }
+              ]
+            },
+            "description": "Paginated customers/suppliers with invoice totals, paid totals, dues and opening balance."
+          },
+          "response": []
+        },
+        {
+          "name": "Party ledger",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware)."
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/parties/{{partyId}}/ledger?party_type=customer",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "parties",
+                "{{partyId}}",
+                "ledger"
+              ],
+              "query": [
+                {
+                  "key": "party_type",
+                  "value": "customer",
+                  "description": "supplier or customer (required)"
+                },
+                {
+                  "key": "from_date",
+                  "value": "2026-01-01T00:00:00Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                },
+                {
+                  "key": "to_date",
+                  "value": "2026-12-31T23:59:59Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Chronological debit/credit ledger for a party."
+          },
+          "response": []
+        },
+        {
+          "name": "Get party opening balance",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware)."
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/parties/{{partyId}}/opening-balance?invoice_type=customer",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "parties",
+                "{{partyId}}",
+                "opening-balance"
+              ],
+              "query": [
+                {
+                  "key": "invoice_type",
+                  "value": "customer",
+                  "description": "customer or supplier (required)"
+                }
+              ]
+            },
+            "description": "Returns the stored opening balance for a party and invoice type."
+          },
+          "response": []
+        },
+        {
+          "name": "Upsert party opening balance",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware).",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"party_id\": \"{{partyId}}\",\n  \"invoice_type\": \"customer\",\n  \"amount\": 0,\n  \"as_of_date\": \"2026-01-01\",\n  \"note\": \"Opening balance\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/v1/parties/{{partyId}}/opening-balance",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "parties",
+                "{{partyId}}",
+                "opening-balance"
+              ]
+            },
+            "description": "Creates or updates a party opening balance. `amount` is signed: positive means the party owes you (or you owe the supplier); negative means an advance."
+          },
+          "response": []
+        },
+        {
+          "name": "Add party payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware).",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"party_id\": \"{{partyId}}\",\n  \"invoice_type\": \"customer\",\n  \"amount\": 0,\n  \"payment_method\": \"cash\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/v1/parties/{{partyId}}/payment",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "parties",
+                "{{partyId}}",
+                "payment"
+              ]
+            },
+            "description": "Records an on-account payment against a party (not tied to a single invoice). `amount` is a positive magnitude."
+          },
+          "response": []
+        }
+      ],
+      "description": "Customers and suppliers: list, ledger, opening balances and on-account payments."
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "Products report",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware).",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/reports/products?sort_direction=desc&skip=0",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "reports",
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "start_date",
+                  "value": "2026-01-01T00:00:00Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                },
+                {
+                  "key": "end_date",
+                  "value": "2026-12-31T23:59:59Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                },
+                {
+                  "key": "branch_id",
+                  "value": "{{branchId}}",
+                  "description": "Branch UUID",
+                  "disabled": true
+                },
+                {
+                  "key": "category_id",
+                  "value": "{{categoryId}}",
+                  "description": "Category UUID",
+                  "disabled": true
+                },
+                {
+                  "key": "name",
+                  "value": "",
+                  "description": "Product name search",
+                  "disabled": true
+                },
+                {
+                  "key": "sort_key",
+                  "value": "total-revenue",
+                  "description": "total-revenue, total-profit or net-income",
+                  "disabled": true
+                },
+                {
+                  "key": "sort_direction",
+                  "value": "desc",
+                  "description": "asc or desc"
+                },
+                {
+                  "key": "skip",
+                  "value": "0",
+                  "description": "Offset for pagination"
+                }
+              ]
+            },
+            "description": "Per-product purchased/sold quantities, revenue, profit and net income."
+          },
+          "response": []
+        },
+        {
+          "name": "Operations report",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware)."
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/reports/operations?branch_id={{branchId}}&group_by=month",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "reports",
+                "operations"
+              ],
+              "query": [
+                {
+                  "key": "start_date",
+                  "value": "2026-01-01T00:00:00Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                },
+                {
+                  "key": "end_date",
+                  "value": "2026-12-31T23:59:59Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                },
+                {
+                  "key": "branch_id",
+                  "value": "{{branchId}}",
+                  "description": "Branch UUID"
+                },
+                {
+                  "key": "group_by",
+                  "value": "month",
+                  "description": "day, week or month"
+                },
+                {
+                  "key": "skip",
+                  "value": "0",
+                  "description": "Offset for pagination",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Revenue, expense, profit, COGS and quantity breakdown, grouped by day/week/month."
+          },
+          "response": []
+        },
+        {
+          "name": "Categories report",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware).",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/reports/categories?sort_direction=desc&skip=0",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "reports",
+                "categories"
+              ],
+              "query": [
+                {
+                  "key": "start_date",
+                  "value": "2026-01-01T00:00:00Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                },
+                {
+                  "key": "end_date",
+                  "value": "2026-12-31T23:59:59Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                },
+                {
+                  "key": "sort_key",
+                  "value": "total-revenue",
+                  "description": "total-revenue, total-profit or net-income",
+                  "disabled": true
+                },
+                {
+                  "key": "sort_direction",
+                  "value": "desc",
+                  "description": "asc or desc"
+                },
+                {
+                  "key": "branch_id",
+                  "value": "{{branchId}}",
+                  "description": "Branch UUID",
+                  "disabled": true
+                },
+                {
+                  "key": "skip",
+                  "value": "0",
+                  "description": "Offset for pagination"
+                }
+              ]
+            },
+            "description": "Per-category stock and revenue/profit figures."
+          },
+          "response": []
+        },
+        {
+          "name": "Sales person report",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware)."
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/reports/sales-person?branch_id={{branchId}}&sort_direction=desc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "reports",
+                "sales-person"
+              ],
+              "query": [
+                {
+                  "key": "start_date",
+                  "value": "2026-01-01T00:00:00Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                },
+                {
+                  "key": "end_date",
+                  "value": "2026-12-31T23:59:59Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                },
+                {
+                  "key": "branch_id",
+                  "value": "{{branchId}}",
+                  "description": "Branch UUID"
+                },
+                {
+                  "key": "sort_key",
+                  "value": "total-revenue",
+                  "description": "total-invoices, total-revenue, total-paid, total-discount or average",
+                  "disabled": true
+                },
+                {
+                  "key": "sort_direction",
+                  "value": "desc",
+                  "description": "asc or desc"
+                },
+                {
+                  "key": "skip",
+                  "value": "0",
+                  "description": "Offset for pagination",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Invoice and revenue performance grouped by sales person."
+          },
+          "response": []
+        },
+        {
+          "name": "Adjustments report",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware).",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/reports/adjustments?skip=0",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "reports",
+                "adjustments"
+              ],
+              "query": [
+                {
+                  "key": "start_date",
+                  "value": "2026-01-01T00:00:00Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                },
+                {
+                  "key": "end_date",
+                  "value": "2026-12-31T23:59:59Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                },
+                {
+                  "key": "branch_id",
+                  "value": "{{branchId}}",
+                  "description": "Branch UUID",
+                  "disabled": true
+                },
+                {
+                  "key": "skip",
+                  "value": "0",
+                  "description": "Offset for pagination"
+                }
+              ]
+            },
+            "description": "Inventory adjustment history."
+          },
+          "response": []
+        },
+        {
+          "name": "Stock transfers report",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware)."
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/reports/stock-transfers?from_branch_id=3c11c205-335a-41fb-9c28-b0d8fc85f759&to_branch_id=6afe43ac-2103-4104-89bb-bcee082880e2",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "reports",
+                "stock-transfers"
+              ],
+              "query": [
+                {
+                  "key": "start_date",
+                  "value": "2026-01-01T00:00:00Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                },
+                {
+                  "key": "end_date",
+                  "value": "2026-12-31T23:59:59Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                },
+                {
+                  "key": "branch_id",
+                  "value": "{{branchId}}",
+                  "description": "Branch UUID",
+                  "disabled": true
+                },
+                {
+                  "key": "from_branch_id",
+                  "value": "3c11c205-335a-41fb-9c28-b0d8fc85f759",
+                  "description": "Source branch UUID"
+                },
+                {
+                  "key": "from_warehouse_id",
+                  "value": "",
+                  "description": "Source warehouse UUID",
+                  "disabled": true
+                },
+                {
+                  "key": "to_branch_id",
+                  "value": "6afe43ac-2103-4104-89bb-bcee082880e2",
+                  "description": "Destination branch UUID"
+                },
+                {
+                  "key": "to_warehouse_id",
+                  "value": "",
+                  "description": "Destination warehouse UUID",
+                  "disabled": true
+                },
+                {
+                  "key": "skip",
+                  "value": "0",
+                  "description": "Offset for pagination",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Stock transfer history between branches/warehouses, including totals."
+          },
+          "response": []
+        },
+        {
+          "name": "Daily report",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware).",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/reports/daily",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "reports",
+                "daily"
+              ],
+              "query": [
+                {
+                  "key": "start_date",
+                  "value": "2026-01-01T00:00:00Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                },
+                {
+                  "key": "end_date",
+                  "value": "2026-12-31T23:59:59Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                },
+                {
+                  "key": "branch_id",
+                  "value": "{{branchId}}",
+                  "description": "Branch UUID",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Daily revenue/expense/profit totals. Defaults to today when dates are omitted."
+          },
+          "response": []
+        },
+        {
+          "name": "Purchases by supplier",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware)."
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/reports/purchases-by-supplier?branch_id={{branchId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "reports",
+                "purchases-by-supplier"
+              ],
+              "query": [
+                {
+                  "key": "start_date",
+                  "value": "2026-01-01T00:00:00Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                },
+                {
+                  "key": "end_date",
+                  "value": "2026-12-31T23:59:59Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                },
+                {
+                  "key": "branch_id",
+                  "value": "{{branchId}}",
+                  "description": "Branch UUID"
+                },
+                {
+                  "key": "sort_key",
+                  "value": "total-amount",
+                  "description": "total-amount, total-paid, total-due, total-products or total-invoices",
+                  "disabled": true
+                },
+                {
+                  "key": "sort_direction",
+                  "value": "desc",
+                  "description": "asc or desc",
+                  "disabled": true
+                },
+                {
+                  "key": "skip",
+                  "value": "0",
+                  "description": "Offset for pagination",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Supplier purchase totals and invoice counts."
+          },
+          "response": []
+        },
+        {
+          "name": "Supplier purchased products",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware).",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/reports/purchases-by-supplier/{{partyId}}/products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "reports",
+                "purchases-by-supplier",
+                "{{partyId}}",
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "start_date",
+                  "value": "2026-01-01T00:00:00Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                },
+                {
+                  "key": "end_date",
+                  "value": "2026-12-31T23:59:59Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                },
+                {
+                  "key": "branch_id",
+                  "value": "{{branchId}}",
+                  "description": "Branch UUID",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Products purchased from one supplier, with total amount."
+          },
+          "response": []
+        },
+        {
+          "name": "Sales by customer",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware)."
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/reports/sales-by-customer?branch_id={{branchId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "reports",
+                "sales-by-customer"
+              ],
+              "query": [
+                {
+                  "key": "start_date",
+                  "value": "2026-01-01T00:00:00Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                },
+                {
+                  "key": "end_date",
+                  "value": "2026-12-31T23:59:59Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                },
+                {
+                  "key": "branch_id",
+                  "value": "{{branchId}}",
+                  "description": "Branch UUID"
+                },
+                {
+                  "key": "sort_key",
+                  "value": "total-amount",
+                  "description": "total-amount, total-paid, total-due, total-products, total-invoices or total-profit",
+                  "disabled": true
+                },
+                {
+                  "key": "sort_direction",
+                  "value": "desc",
+                  "description": "asc or desc",
+                  "disabled": true
+                },
+                {
+                  "key": "skip",
+                  "value": "0",
+                  "description": "Offset for pagination",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Customer sales totals, dues and profit."
+          },
+          "response": []
+        },
+        {
+          "name": "Customer sold products",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware).",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/reports/sales-by-customer/{{partyId}}/products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "reports",
+                "sales-by-customer",
+                "{{partyId}}",
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "start_date",
+                  "value": "2026-01-01T00:00:00Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                },
+                {
+                  "key": "end_date",
+                  "value": "2026-12-31T23:59:59Z",
+                  "description": "ISO 8601 datetime",
+                  "disabled": true
+                },
+                {
+                  "key": "branch_id",
+                  "value": "{{branchId}}",
+                  "description": "Branch UUID",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Products sold to one customer, with total amount and profit."
+          },
+          "response": []
+        }
+      ],
+      "description": "Analytics and reporting endpoints. All support optional date/branch filtering."
+    },
+    {
+      "name": "Widgets",
+      "item": [
+        {
+          "name": "Finance & inventory summary",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware).",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/widgets/finance-inventory-summary",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "widgets",
+                "finance-inventory-summary"
+              ],
+              "query": [
+                {
+                  "key": "branch_id",
+                  "value": "{{branchId}}",
+                  "description": "Branch UUID",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Today/month expenses and revenue, stock in/out, stock and retail valuation, supplier and customer dues."
+          },
+          "response": []
+        },
+        {
+          "name": "Most profitable categories",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware).",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/widgets/most-profitable-categories",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "widgets",
+                "most-profitable-categories"
+              ],
+              "query": [
+                {
+                  "key": "branch_id",
+                  "value": "{{branchId}}",
+                  "description": "Branch UUID",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Top categories ranked by profit."
+          },
+          "response": []
+        },
+        {
+          "name": "Average sales by weekday",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware).",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/widgets/average-sales-by-weekdays",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "widgets",
+                "average-sales-by-weekdays"
+              ],
+              "query": [
+                {
+                  "key": "branch_id",
+                  "value": "{{branchId}}",
+                  "description": "Branch UUID",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Average sales per day of week."
+          },
+          "response": []
+        },
+        {
+          "name": "Low stock items",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware).",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/widgets/low-stock-items",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "widgets",
+                "low-stock-items"
+              ],
+              "query": [
+                {
+                  "key": "branch_id",
+                  "value": "{{branchId}}",
+                  "description": "Branch UUID",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Items at or below their low-stock threshold."
+          },
+          "response": []
+        },
+        {
+          "name": "Monthly transactions breakdown",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware).",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/widgets/monthly-transactions-breakdown",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "widgets",
+                "monthly-transactions-breakdown"
+              ],
+              "query": [
+                {
+                  "key": "branch_id",
+                  "value": "{{branchId}}",
+                  "description": "Branch UUID",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Monthly transaction totals for the breakdown chart."
+          },
+          "response": []
+        },
+        {
+          "name": "Due invoices",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware).",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/widgets/due-invoices?limit=10&page=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "widgets",
+                "due-invoices"
+              ],
+              "query": [
+                {
+                  "key": "invoice_type",
+                  "value": "customer",
+                  "description": "customer or supplier",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Page size (1-100)"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number (1-based)"
+                },
+                {
+                  "key": "branch_id",
+                  "value": "{{branchId}}",
+                  "description": "Branch UUID",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Outstanding customer/supplier invoices, paginated by page number."
+          },
+          "response": []
+        },
+        {
+          "name": "Recent transactions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-Organization-ID",
+                "value": "{{organizationId}}",
+                "description": "Tenant/organization UUID (required by verify_token middleware).",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/widgets/recent-transactions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "widgets",
+                "recent-transactions"
+              ],
+              "query": [
+                {
+                  "key": "branch_id",
+                  "value": "{{branchId}}",
+                  "description": "Branch UUID",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Most recent transactions for the activity feed."
+          },
+          "response": []
+        }
+      ],
+      "description": "Dashboard widget data for the overview screen."
+    },
+    {
+      "name": "Admin / Organizations",
+      "item": [
+        {
+          "name": "Create organization payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-Admin-Token",
+                "value": "Bearer {{adminToken}}",
+                "description": "Admin bearer token from the ADMIN_TOKEN env var.",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 0,\n  \"payment_period\": \"month\",\n  \"creation_method\": \"manual\",\n  \"payment_period_start\": \"2026-01-01T00:00:00Z\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/v1/admin/organizations/{{organizationId}}/payments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "admin",
+                "organizations",
+                "{{organizationId}}",
+                "payments"
+              ]
+            },
+            "description": "Records a manual or gateway payment for an organization subscription."
+          },
+          "response": []
+        },
+        {
+          "name": "Update organization plan",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-Admin-Token",
+                "value": "Bearer {{adminToken}}",
+                "description": "Admin bearer token from the ADMIN_TOKEN env var.",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payment_period\": \"month\",\n  \"plan_id\": \"{{planId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/v1/admin/organizations/{{organizationId}}/plans",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "admin",
+                "organizations",
+                "{{organizationId}}",
+                "plans"
+              ]
+            },
+            "description": "Changes the subscription plan and billing period for an organization."
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel subscription",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-Admin-Token",
+                "value": "Bearer {{adminToken}}",
+                "description": "Admin bearer token from the ADMIN_TOKEN env var.",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/admin/organizations/{{organizationId}}/cancel-subscription",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "admin",
+                "organizations",
+                "{{organizationId}}",
+                "cancel-subscription"
+              ]
+            },
+            "description": "Cancels the organization subscription at the end of the current period."
+          },
+          "response": []
+        },
+        {
+          "name": "Extend trial",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-Admin-Token",
+                "value": "Bearer {{adminToken}}",
+                "description": "Admin bearer token from the ADMIN_TOKEN env var.",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"extended_days\": 30\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/v1/admin/organizations/{{organizationId}}/extend-trial",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "admin",
+                "organizations",
+                "{{organizationId}}",
+                "extend-trial"
+              ]
+            },
+            "description": "Extends the organization trial by the given number of days."
+          },
+          "response": []
+        }
+      ],
+      "description": "Backoffice subscription endpoints. These use the `X-Admin-Token` header (raw ADMIN_TOKEN prefixed with \"Bearer \") instead of a Supabase user token.",
+      "auth": {
+        "type": "noauth"
+      }
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8000"
+    },
+    {
+      "key": "bearerToken",
+      "value": ""
+    },
+    {
+      "key": "organizationId",
+      "value": ""
+    },
+    {
+      "key": "adminToken",
+      "value": ""
+    },
+    {
+      "key": "inventoryId",
+      "value": ""
+    },
+    {
+      "key": "invoiceId",
+      "value": ""
+    },
+    {
+      "key": "partyId",
+      "value": ""
+    },
+    {
+      "key": "branchId",
+      "value": ""
+    },
+    {
+      "key": "categoryId",
+      "value": ""
+    },
+    {
+      "key": "warehouseId",
+      "value": ""
+    },
+    {
+      "key": "planId",
+      "value": ""
+    }
+  ]
+}
