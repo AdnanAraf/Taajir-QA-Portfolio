@@ -10,6 +10,8 @@ This project showcases comprehensive Software Quality Assurance (SQA) activities
 
 **Testing Focus**: Manual Testing, Functional Testing, API Testing, and Regression Testing.
 
+**Testing Tools**: Postman, Jira
+
 **Bug Tracking & Management**: Jira.
 
 
